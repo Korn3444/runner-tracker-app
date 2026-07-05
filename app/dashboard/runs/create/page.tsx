@@ -3,7 +3,7 @@
 import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/utils/supabase/client'
-import { Activity, ArrowLeft, Save, Upload, ImageIcon } from 'lucide-react'
+import { Activity, ArrowLeft, Save, ImageIcon } from 'lucide-react'
 import Link from 'next/link'
 
 export default function CreateRunPage() {
@@ -16,7 +16,7 @@ export default function CreateRunPage() {
   const [notes, setNotes] = useState('')
   const [imageFile, setImageFile] = useState<File | null>(null)
   const [imagePreview, setImagePreview] = useState<string | null>(null)
-  
+
   const [loading, setLoading] = useState(false)
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
 
@@ -35,7 +35,7 @@ export default function CreateRunPage() {
 
     try {
       const { data: { user } } = await supabase.auth.getUser()
-      if (!user) throw new Error('Authentication dynamic session expired.')
+      if (!user) throw new Error('เซสชันหมดอายุ กรุณาเข้าสู่ระบบใหม่')
 
       let uploadedImageUrl: string | null = null
 
@@ -43,7 +43,7 @@ export default function CreateRunPage() {
       if (imageFile) {
         const fileExt = imageFile.name.split('.').pop()
         const fileName = `${user.id}/${Date.now()}.${fileExt}`
-        
+
         const { data: uploadData, error: uploadError } = await supabase.storage
           .from('run-images')
           .upload(fileName, imageFile, {
@@ -76,7 +76,7 @@ export default function CreateRunPage() {
       router.push('/dashboard')
       router.refresh()
     } catch (err: any) {
-      setErrorMsg(err.message || 'An unexpected error occurred while saving metadata.')
+      setErrorMsg(err.message || 'เกิดข้อผิดพลาด กรุณาลองใหม่')
     } finally {
       setLoading(false)
     }
@@ -86,7 +86,7 @@ export default function CreateRunPage() {
     <div className="min-h-screen bg-slate-50 py-10 px-4">
       <div className="max-w-2xl mx-auto">
         <Link href="/dashboard" className="inline-flex items-center gap-2 text-sm font-semibold text-slate-500 hover:text-slate-900 transition-colors mb-6">
-          <ArrowLeft className="w-4 h-4" /> Back to Logs
+          <ArrowLeft className="w-4 h-4" /> กลับหน้าหลัก
         </Link>
 
         <div className="bg-white border border-slate-200 rounded-2xl shadow-sm p-6 md:p-8">
@@ -95,8 +95,8 @@ export default function CreateRunPage() {
               <Activity className="w-5 h-5" />
             </div>
             <div>
-              <h1 className="text-xl font-bold text-slate-900">Record a New Running</h1>
-              <p className="text-xs text-slate-400">Log down your training session insights and upload image proof</p>
+              <h1 className="text-xl font-bold text-slate-900">บันทึกการวิ่งใหม่</h1>
+              <p className="text-xs text-slate-400">กรอกข้อมูลและอัปโหลดรูปภาพการวิ่งของคุณ</p>
             </div>
           </div>
 
@@ -109,7 +109,7 @@ export default function CreateRunPage() {
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">Distance (Kilometers)</label>
+                <label className="block text-sm font-semibold text-slate-700 mb-2">ระยะทาง (กิโลเมตร)</label>
                 <input
                   type="number"
                   step="0.01"
@@ -117,20 +117,20 @@ export default function CreateRunPage() {
                   min="0.01"
                   value={distance}
                   onChange={(e) => setDistance(e.target.value)}
-                  placeholder="e.g. 5.25"
+                  placeholder="เช่น 5.25"
                   disabled={loading}
                   className="w-full px-4 py-2.5 border border-slate-300 rounded-xl text-sm focus:outline-none focus:border-orange-500 bg-white"
                 />
               </div>
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">Duration (Minutes)</label>
+                <label className="block text-sm font-semibold text-slate-700 mb-2">เวลา (นาที)</label>
                 <input
                   type="number"
                   required
                   min="1"
                   value={duration}
                   onChange={(e) => setDuration(e.target.value)}
-                  placeholder="e.g. 35"
+                  placeholder="เช่น 35"
                   disabled={loading}
                   className="w-full px-4 py-2.5 border border-slate-300 rounded-xl text-sm focus:outline-none focus:border-orange-500 bg-white"
                 />
@@ -138,7 +138,7 @@ export default function CreateRunPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-2">Date of Running</label>
+              <label className="block text-sm font-semibold text-slate-700 mb-2">วันที่วิ่ง</label>
               <input
                 type="date"
                 required
@@ -150,19 +150,19 @@ export default function CreateRunPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-2">Run Notes / Thoughts</label>
+              <label className="block text-sm font-semibold text-slate-700 mb-2">บันทึกความรู้สึก / หมายเหตุ</label>
               <textarea
                 rows={3}
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
-                placeholder="How did the workout feel? What was the weather condition?"
+                placeholder="รู้สึกอย่างไร? สภาพอากาศเป็นอย่างไร?"
                 disabled={loading}
                 className="w-full px-4 py-2.5 border border-slate-300 rounded-xl text-sm focus:outline-none focus:border-orange-500 bg-white"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-2">Snapshot Photo Attachment</label>
+              <label className="block text-sm font-semibold text-slate-700 mb-2">แนบรูปภาพ</label>
               <div className="mt-1 flex flex-col items-center justify-center px-6 pt-5 pb-6 border-2 border-slate-300 border-dashed rounded-2xl bg-slate-50 hover:bg-slate-100 transition-colors relative cursor-pointer">
                 <input
                   type="file"
@@ -171,20 +171,20 @@ export default function CreateRunPage() {
                   disabled={loading}
                   className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                 />
-                
+
                 {imagePreview ? (
                   <div className="text-center">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={imagePreview} alt="Preview" className="max-h-40 mx-auto rounded-lg object-cover mb-3" />
-                    <p className="text-xs text-orange-600 font-semibold">Click or drag to change image</p>
+                    <p className="text-xs text-orange-600 font-semibold">คลิกหรือลากไฟล์เพื่อเปลี่ยนรูป</p>
                   </div>
                 ) : (
                   <div className="space-y-1 text-center pointer-events-none">
                     <ImageIcon className="mx-auto h-10 w-10 text-slate-400" />
                     <div className="flex text-sm text-slate-600">
-                      <span className="font-semibold text-orange-600">Upload an image file</span>
+                      <span className="font-semibold text-orange-600">อัปโหลดรูปภาพ</span>
                     </div>
-                    <p className="text-xs text-slate-400">PNG, JPG, WEBP up to 5MB</p>
+                    <p className="text-xs text-slate-400">PNG, JPG, WEBP ขนาดไม่เกิน 5MB</p>
                   </div>
                 )}
               </div>
@@ -192,14 +192,14 @@ export default function CreateRunPage() {
 
             <div className="pt-4 border-t border-slate-100 flex items-center justify-end gap-3">
               <Link href="/dashboard" className="px-4 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-100 rounded-xl transition-colors">
-                Cancel
+                ยกเลิก
               </Link>
               <button
                 type="submit"
                 disabled={loading}
                 className="flex items-center gap-2 px-5 py-2.5 bg-orange-600 hover:bg-orange-700 text-white rounded-xl text-sm font-medium shadow-sm transition-colors disabled:opacity-50"
               >
-                <Save className="w-4 h-4" /> {loading ? 'Saving Record...' : 'Save Workout'}
+                <Save className="w-4 h-4" /> {loading ? 'กำลังบันทึก...' : 'บันทึกการวิ่ง'}
               </button>
             </div>
           </form>

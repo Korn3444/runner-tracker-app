@@ -7,7 +7,7 @@ export default function DeleteButton({ id, imageUrl }: { id: string; imageUrl: s
   const [deleting, setDeleting] = React.useState(false)
 
   const handleDelete = async () => {
-    if (!confirm('Are you absolutely sure you want to delete this run record?')) return
+    if (!confirm('คุณต้องการลบบันทึกการวิ่งนี้ใช่หรือไม่?')) return
     setDeleting(true)
     try {
       const { createClient: createBrowserClient } = await import('@/utils/supabase/client')
@@ -28,7 +28,7 @@ export default function DeleteButton({ id, imageUrl }: { id: string; imageUrl: s
 
       window.location.reload()
     } catch (err: any) {
-      alert(err.message || 'Failed to delete record.')
+      alert(err.message || 'เกิดข้อผิดพลาด กรุณาลองใหม่')
       setDeleting(false)
     }
   }
@@ -38,7 +38,7 @@ export default function DeleteButton({ id, imageUrl }: { id: string; imageUrl: s
       onClick={handleDelete}
       disabled={deleting}
       className="p-2 text-red-600 hover:bg-red-50 rounded-lg border border-transparent hover:border-red-100 transition-all disabled:opacity-50"
-      title="Delete Record"
+      title="ลบบันทึก"
     >
       <Trash2 className="w-4 h-4" />
     </button>

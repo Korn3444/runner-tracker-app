@@ -36,13 +36,13 @@ export default function RegisterPage() {
 
       setMessage({
         type: 'success',
-        text: 'Registration successful! Please check your email for confirmation link or go ahead and sign in.',
+        text: 'สมัครสมาชิกสำเร็จ! กรุณาตรวจสอบอีเมลของคุณเพื่อยืนยันบัญชี หรือเข้าสู่ระบบได้เลย',
       })
       setEmail('')
       setPassword('')
       setFullName('')
     } catch (err: any) {
-      setMessage({ type: 'error', text: err.message || 'An error occurred during registration.' })
+      setMessage({ type: 'error', text: err.message || 'เกิดข้อผิดพลาดระหว่างการสมัครสมาชิก' })
     } finally {
       setLoading(false)
     }
@@ -56,8 +56,8 @@ export default function RegisterPage() {
             <Activity className="w-8 h-8" />
             <span>RunnerTracker</span>
           </Link>
-          <h2 className="text-xl font-bold text-slate-900">Create Account</h2>
-          <p className="text-slate-500 text-sm">Join us and map out your running activities</p>
+          <h2 className="text-xl font-bold text-slate-900">สร้างบัญชีใหม่</h2>
+          <p className="text-slate-500 text-sm">เริ่มต้นบันทึกกิจกรรมการวิ่งของคุณ</p>
         </div>
 
         {message && (
@@ -74,19 +74,19 @@ export default function RegisterPage() {
 
         <form onSubmit={handleRegister} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">Full Name</label>
+            <label className="block text-sm font-medium text-slate-700 mb-1">ชื่อ-นามสกุล</label>
             <input
               type="text"
               required
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
               className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-orange-500"
-              placeholder="John Doe"
+              placeholder="สมชาย ใจดี"
               disabled={loading}
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">Email Address</label>
+            <label className="block text-sm font-medium text-slate-700 mb-1">อีเมล</label>
             <input
               type="email"
               required
@@ -98,14 +98,14 @@ export default function RegisterPage() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">Password</label>
+            <label className="block text-sm font-medium text-slate-700 mb-1">รหัสผ่าน</label>
             <input
               type="password"
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-orange-500"
-              placeholder="Minimum 6 characters"
+              placeholder="อย่างน้อย 6 ตัวอักษร"
               minLength={6}
               disabled={loading}
             />
@@ -116,14 +116,14 @@ export default function RegisterPage() {
             disabled={loading}
             className="w-full py-2.5 px-4 bg-orange-600 hover:bg-orange-700 text-white rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
           >
-            {loading ? 'Registering...' : <><UserPlus className="w-4 h-4" /> Create Account</>}
+            {loading ? 'กำลังสมัครสมาชิก...' : <><UserPlus className="w-4 h-4" /> สมัครสมาชิก</>}
           </button>
         </form>
 
         <p className="mt-6 text-center text-sm text-slate-500">
-          Already have an account?{' '}
+          มีบัญชีอยู่แล้ว?{' '}
           <Link href="/login" className="text-orange-600 hover:underline font-medium">
-            Sign In here
+            เข้าสู่ระบบ
           </Link>
         </p>
       </div>

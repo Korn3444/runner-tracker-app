@@ -32,7 +32,7 @@ function LoginForm() {
       router.push('/dashboard')
       router.refresh()
     } catch (err: any) {
-      setErrorMessage(err.message || 'Failed to sign in. Please check credentials.')
+      setErrorMessage(err.message || 'เข้าสู่ระบบไม่สำเร็จ กรุณาตรวจสอบอีเมลและรหัสผ่าน')
     } finally {
       setLoading(false)
     }
@@ -50,7 +50,7 @@ function LoginForm() {
       })
       if (error) throw error
     } catch (err: any) {
-      setErrorMessage(err.message || 'Failed to initialize Google OAuth.')
+      setErrorMessage(err.message || 'ไม่สามารถเข้าสู่ระบบด้วย Google ได้')
       setLoading(false)
     }
   }
@@ -63,8 +63,8 @@ function LoginForm() {
             <Activity className="w-8 h-8" />
             <span>RunnerTracker</span>
           </Link>
-          <h2 className="text-xl font-bold text-slate-900">Welcome Back</h2>
-          <p className="text-slate-500 text-sm">Sign in to track your running progression</p>
+          <h2 className="text-xl font-bold text-slate-900">ยินดีต้อนรับกลับ</h2>
+          <p className="text-slate-500 text-sm">เข้าสู่ระบบเพื่อติดตามความก้าวหน้าในการวิ่งของคุณ</p>
         </div>
 
         {errorMessage && (
@@ -75,7 +75,7 @@ function LoginForm() {
 
         <form onSubmit={handleEmailLogin} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">Email Address</label>
+            <label className="block text-sm font-medium text-slate-700 mb-1">อีเมล</label>
             <input
               type="email"
               required
@@ -87,7 +87,7 @@ function LoginForm() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">Password</label>
+            <label className="block text-sm font-medium text-slate-700 mb-1">รหัสผ่าน</label>
             <input
               type="password"
               required
@@ -104,13 +104,13 @@ function LoginForm() {
             disabled={loading}
             className="w-full py-2.5 px-4 bg-orange-600 hover:bg-orange-700 text-white rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
           >
-            {loading ? 'Please wait...' : <><LogIn className="w-4 h-4" /> Sign In with Email</>}
+            {loading ? 'กำลังดำเนินการ...' : <><LogIn className="w-4 h-4" /> เข้าสู่ระบบด้วยอีเมล</>}
           </button>
         </form>
 
         <div className="relative my-6">
           <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-slate-200"></div></div>
-          <div className="relative flex justify-center text-xs uppercase"><span className="bg-white px-2 text-slate-500">Or continue with</span></div>
+          <div className="relative flex justify-center text-xs uppercase"><span className="bg-white px-2 text-slate-500">หรือเข้าสู่ระบบด้วย</span></div>
         </div>
 
         <button
@@ -124,13 +124,13 @@ function LoginForm() {
             <path fill="#FBBC05" d="M5.23 14.24A7.14 7.14 0 0 1 4.8 12c0-.79.13-1.57.38-2.31V6.61H1.32A11.95 11.95 0 0 0 0 12c0 1.92.45 3.74 1.25 5.39l3.98-3.15z"/>
             <path fill="#34A853" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.43-3.43C17.95 1.19 15.24 0 12 0 7.37 0 3.31 3.88 1.32 8.13l3.98 3.15c.95-2.88 3.62-5.01 6.77-5.01z"/>
           </svg>
-          Sign In with Google
+          เข้าสู่ระบบด้วย Google
         </button>
 
         <p className="mt-6 text-center text-sm text-slate-500">
-          Don&apos;t have an account?{' '}
+          ยังไม่มีบัญชี?{' '}
           <Link href="/register" className="text-orange-600 hover:underline font-medium">
-            Register here
+            สมัครสมาชิก
           </Link>
         </p>
       </div>

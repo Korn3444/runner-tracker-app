@@ -17,10 +17,10 @@ export default function EditRunPage() {
   const [runDate, setRunDate] = useState('')
   const [notes, setNotes] = useState('')
   const [existingImageUrl, setExistingImageUrl] = useState<string | null>(null)
-  
+
   const [imageFile, setImageFile] = useState<File | null>(null)
   const [imagePreview, setImagePreview] = useState<string | null>(null)
-  
+
   const [initializing, setInitializing] = useState(true)
   const [loading, setLoading] = useState(false)
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
@@ -35,7 +35,7 @@ export default function EditRunPage() {
         .single()
 
       if (error) throw error
-      if (!run) throw new Error('Target run profile log item was not found.')
+      if (!run) throw new Error('ไม่พบข้อมูลการวิ่งที่ต้องการ')
 
       setDistance(run.distance_km.toString())
       setDuration(run.duration_minutes.toString())
@@ -43,7 +43,7 @@ export default function EditRunPage() {
       setNotes(run.notes || '')
       setExistingImageUrl(run.image_url)
     } catch (err: any) {
-      setErrorMsg(err.message || 'Failed to populate target run logs metrics detail.')
+      setErrorMsg(err.message || 'ไม่สามารถโหลดข้อมูลการวิ่งได้')
     } finally {
       setInitializing(false)
     }
@@ -70,7 +70,7 @@ export default function EditRunPage() {
 
     try {
       const { data: { user } } = await supabase.auth.getUser()
-      if (!user) throw new Error('Required authorization instance could not be requested.')
+      if (!user) throw new Error('เซสชันหมดอายุ กรุณาเข้าสู่ระบบใหม่')
 
       let updatedImageUrl = existingImageUrl
 
@@ -117,7 +117,7 @@ export default function EditRunPage() {
       router.push('/dashboard')
       router.refresh()
     } catch (err: any) {
-      setErrorMsg(err.message || 'Failed to update dynamic database metrics transaction metadata.')
+      setErrorMsg(err.message || 'เกิดข้อผิดพลาด กรุณาลองใหม่')
     } finally {
       setLoading(false)
     }
@@ -126,7 +126,7 @@ export default function EditRunPage() {
   if (initializing) {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center font-medium text-sm text-slate-500">
-        Loading run metadata information details...
+        กำลังโหลดข้อมูล...
       </div>
     )
   }
@@ -135,7 +135,7 @@ export default function EditRunPage() {
     <div className="min-h-screen bg-slate-50 py-10 px-4">
       <div className="max-w-2xl mx-auto">
         <Link href="/dashboard" className="inline-flex items-center gap-2 text-sm font-semibold text-slate-500 hover:text-slate-900 transition-colors mb-6">
-          <ArrowLeft className="w-4 h-4" /> Cancel Edit & Back
+          <ArrowLeft className="w-4 h-4" /> ยกเลิกการแก้ไข
         </Link>
 
         <div className="bg-white border border-slate-200 rounded-2xl shadow-sm p-6 md:p-8">
@@ -144,8 +144,8 @@ export default function EditRunPage() {
               <Activity className="w-5 h-5" />
             </div>
             <div>
-              <h1 className="text-xl font-bold text-slate-900">Modify Run Log Record</h1>
-              <p className="text-xs text-slate-400">Update metrics logs parameters or replace workout attachments</p>
+              <h1 className="text-xl font-bold text-slate-900">แก้ไขบันทึกการวิ่ง</h1>
+              <p className="text-xs text-slate-400">แก้ไขข้อมูลหรือเปลี่ยนรูปภาพของการวิ่ง</p>
             </div>
           </div>
 
@@ -158,7 +158,7 @@ export default function EditRunPage() {
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">Distance (Kilometers)</label>
+                <label className="block text-sm font-semibold text-slate-700 mb-2">ระยะทาง (กิโลเมตร)</label>
                 <input
                   type="number"
                   step="0.01"
@@ -171,7 +171,7 @@ export default function EditRunPage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">Duration (Minutes)</label>
+                <label className="block text-sm font-semibold text-slate-700 mb-2">เวลา (นาที)</label>
                 <input
                   type="number"
                   required
@@ -185,7 +185,7 @@ export default function EditRunPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-2">Date of Activity</label>
+              <label className="block text-sm font-semibold text-slate-700 mb-2">วันที่วิ่ง</label>
               <input
                 type="date"
                 required
@@ -197,7 +197,7 @@ export default function EditRunPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-2">Log Run Description</label>
+              <label className="block text-sm font-semibold text-slate-700 mb-2">บันทึกความรู้สึก / หมายเหตุ</label>
               <textarea
                 rows={3}
                 value={notes}
@@ -208,7 +208,7 @@ export default function EditRunPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-2">Attached Trail Image</label>
+              <label className="block text-sm font-semibold text-slate-700 mb-2">รูปภาพ</label>
               <div className="mt-1 flex flex-col items-center justify-center px-6 pt-5 pb-6 border-2 border-slate-300 border-dashed rounded-2xl bg-slate-50 hover:bg-slate-100 transition-colors relative cursor-pointer">
                 <input
                   type="file"
@@ -217,26 +217,26 @@ export default function EditRunPage() {
                   disabled={loading}
                   className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                 />
-                
+
                 {imagePreview ? (
                   <div className="text-center">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={imagePreview} alt="Preview" className="max-h-40 mx-auto rounded-lg object-cover mb-3" />
-                    <p className="text-xs text-orange-600 font-semibold">Replace file change detection</p>
+                    <p className="text-xs text-orange-600 font-semibold">คลิกเพื่อเปลี่ยนรูปภาพ</p>
                   </div>
                 ) : existingImageUrl ? (
                   <div className="text-center">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={existingImageUrl} alt="Current Attachment" className="max-h-40 mx-auto rounded-lg object-cover mb-3" />
-                    <p className="text-xs text-slate-500">Currently attached image. Click to upload a new one to replace.</p>
+                    <img src={existingImageUrl} alt="รูปภาพปัจจุบัน" className="max-h-40 mx-auto rounded-lg object-cover mb-3" />
+                    <p className="text-xs text-slate-500">รูปภาพปัจจุบัน คลิกเพื่อเปลี่ยน</p>
                   </div>
                 ) : (
                   <div className="space-y-1 text-center pointer-events-none">
                     <ImageIcon className="mx-auto h-10 w-10 text-slate-400" />
                     <div className="flex text-sm text-slate-600">
-                      <span className="font-semibold text-orange-600">Upload a fresh image file</span>
+                      <span className="font-semibold text-orange-600">อัปโหลดรูปภาพ</span>
                     </div>
-                    <p className="text-xs text-slate-400">PNG, JPG, WEBP up to 5MB</p>
+                    <p className="text-xs text-slate-400">PNG, JPG, WEBP ขนาดไม่เกิน 5MB</p>
                   </div>
                 )}
               </div>
@@ -244,14 +244,14 @@ export default function EditRunPage() {
 
             <div className="pt-4 border-t border-slate-100 flex items-center justify-end gap-3">
               <Link href="/dashboard" className="px-4 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-100 rounded-xl transition-colors">
-                Back
+                ยกเลิก
               </Link>
               <button
                 type="submit"
                 disabled={loading}
                 className="flex items-center gap-2 px-5 py-2.5 bg-orange-600 hover:bg-orange-700 text-white rounded-xl text-sm font-medium shadow-sm transition-colors disabled:opacity-50"
               >
-                {loading ? 'Updating Log...' : 'Update Log Details'}
+                <Save className="w-4 h-4" /> {loading ? 'กำลังบันทึก...' : 'บันทึกการแก้ไข'}
               </button>
             </div>
           </form>
